@@ -20,6 +20,35 @@ form.addEventListener('submit', (e) => {
     form.reset();
 });
 
+// FUNÇÃO NOVA: Verifica se existem máquinas atrasadas ou vencendo hoje e emite um aviso
+function verificarAlertasUrgentes() {
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+
+    let maquinasCriticas = [];
+
+    machines.forEach(m => {
+        const ultima = new Date(m.ultimaData + 'T00:00:00');
+        const proxima = new Date(ultima);
+        proxima.setDate(ultima.getDate() + m.intervalo);
+
+        const diferencaTempo = proxima.getTime() - hoje.getTime();
+        const diasRestantes = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
+
+        // Se estiver atrasada ou vencer hoje (0 dias)
+        if (diasRestantes <= 0) {
+            maquinasCriticas.push(`• ${m.nome} (${diasRestantes === 0 ? 'Vence Hoje!' : 'Atrasada'})`);
+        }
+    });
+
+    // Se encontrou alguma máquina com problema, solta o alerta na tela
+    if (maquinasCriticas.length > 0) {
+        setTimeout(() => {
+            alert(`⚠️ ATENÇÃO - MANUTENÇÃO PENDENTE!\n\nAs seguintes máquinas precisam de revisão:\n${maquinasCriticas.join('\n')}`);
+        }, 800); // Aguarda quase 1 segundo após abrir o app para soltar o aviso
+    }
+}
+
 // Função para calcular prazos e renderizar na tela
 function renderizarMaquinas() {
     listaContainer.innerHTML = '';
@@ -30,19 +59,16 @@ function renderizarMaquinas() {
     }
 
     const hoje = new Date();
-    hoje.setHours(0,0,0,0); // Zera as horas para cálculo exato de dias
+    hoje.setHours(0,0,0,0); 
 
     machines.forEach(m => {
-        // 1. Calcula a Próxima Data
         const ultima = new Date(m.ultimaData + 'T00:00:00');
         const proxima = new Date(ultima);
         proxima.setDate(ultima.getDate() + m.intervalo);
 
-        // 2. Calcula a diferença de dias restando
         const diferencaTempo = proxima.getTime() - hoje.getTime();
         const diasRestantes = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
 
-        // 3. Define as cores e badges de Status com base nos dias
         let corStatus = 'bg-green-100 text-green-800 border-green-300';
         let textoStatus = '🟢 EM DIA';
         let txtDias = `${diasRestantes} dias restantes`;
@@ -56,10 +82,8 @@ function renderizarMaquinas() {
             textoStatus = '⚠️ ATENÇÃO';
         }
 
-        // Formata as datas para o padrão brasileiro (DD/MM/AAAA)
         const formatarData = (date) => date.toLocaleDateString('pt-BR');
 
-        // 4. Cria o layout do cartão do equipamento
         const card = document.createElement('div');
         card.className = `p-4 rounded-xl border bg-white shadow-sm flex flex-col justify-between space-y-2 border-l-4 ${diasRestantes < 0 ? 'border-l-red-500' : diasRestantes <= 3 ? 'border-l-amber-500' : 'border-l-green-500'}`;
         card.innerHTML = `
@@ -93,5 +117,6 @@ function salvarEAtualizar() {
     renderizarMaquinas();
 }
 
-// Inicializa a tela ao abrir o app
+// Inicializa a tela e roda a verificação de alertas ao abrir o app
 renderizarMaquinas();
+verificarAlertasUrgentes();
