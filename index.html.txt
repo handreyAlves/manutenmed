@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManutenMed - Controle de Manutenção</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen pb-12">
+
+    <header class="bg-slate-800 text-white p-4 shadow-md sticky top-0 z-10">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">🏥 ManutenMed</h1>
+            <span class="text-xs bg-slate-700 px-2 py-1 rounded">Maint-App v1.0</span>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 space-y-6">
+
+        <section class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                <span>📝</span> Nova Manutenção
+            </h2>
+            <form id="form-manutencao" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Equipamento / Máquina</label>
+                    <input type="text" id="maquina" required placeholder="Ex: Autoclave Hospitalar 02" 
+                           class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-slate-500 outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Periodicidade</label>
+                        <select id="periodicidade" class="w-full border border-gray-300 p-2.5 rounded-lg bg-white">
+                            <option value="7">Semanal</option>
+                            <option value="30">Mensal</option>
+                            <option value="90">Trimestral</option>
+                            <option value="180">Semestral</option>
+                            <option value="365">Anual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Data da Última</label>
+                        <input type="date" id="data-ultima" required 
+                               class="w-full border border-gray-300 p-2.5 rounded-lg">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-lg transition shadow">
+                    Salvar Registro
+                </button>
+            </form>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                <span>📊</span> Painel de Prazos
+            </h2>
+            <div id="lista-maquinas" class="space-y-3">
+                </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
