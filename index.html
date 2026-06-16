@@ -63,5 +63,12 @@
     </main>
 
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('ManutenMed operando em modo Offline/PWA!'))
+                .catch(err => console.log('Erro ao ativar modo offline:', err));
+        }
+    </script>
 </body>
 </html>
